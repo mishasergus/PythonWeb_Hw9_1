@@ -1,0 +1,19 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Delete {{ film.name }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page">
+        <a class="back-link" href="{% url 'cinema:film_detail' film_id=film.id %}">← Back to film</a>
+        <p class="eyebrow">Collection management</p>
+        <h1>Delete this film?</h1>
+        <p class="form-intro">“{{ film.name }}” will be permanently removed from the collection.</p>
+        <form class="site-form" method="post">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button class="button button-danger" type="submit">Delete film</button>
+                <a class="text-link" href="{% url 'cinema:film_detail' film_id=film.id %}">Cancel</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

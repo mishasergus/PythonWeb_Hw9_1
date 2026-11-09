@@ -1,0 +1,61 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Choose seats - {{ hall.film.name }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page seat-page">
+        <a class="back-link" href="{% url 'cinema:book_ticket' film_id=hall.film.id %}">← Back to halls</a>
+        <p class="eyebrow">{{ hall.film.name }}</p>
+        <h1>Choose seats</h1>
+        <p class="form-intro">{{ hall.name }} · Regular ${{ hall.regular_price }} · VIP ${{ hall.vip_price }}</p>
+
+        <form class="site-form" method="post">
+            {% csrf_token %}
+            <div class="screen" aria-hidden="true">SCREEN</div>
+
+            {% if vip_seats %}
+                <fieldset class="seat-section">
+                    <legend>VIP seats</legend>
+                    <div class="seat-grid">
+                        {% for seat in vip_seats %}
+                            <label class="seat-option{% if seat.booked %} seat-unavailable{% endif %}">
+                                <input type="checkbox" name="selected_VIP_seats" value="{{ seat.number }}"
+                                    {% if seat.booked %}disabled aria-label="VIP seat {{ seat.number }} booked"{% else %}aria-label="Select VIP seat {{ seat.number }}"{% endif %}>
+                                <span>{{ seat.number }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            {% endif %}
+
+            {% if regular_seats %}
+                <fieldset class="seat-section">
+                    <legend>Regular seats</legend>
+                    <div class="seat-grid">
+                        {% for seat in regular_seats %}
+                            <label class="seat-option{% if seat.booked %} seat-unavailable{% endif %}">
+                                <input type="checkbox" name="selected_seats" value="{{ seat.number }}"
+                                    {% if seat.booked %}disabled aria-label="Seat {{ seat.number }} booked"{% else %}aria-label="Select seat {{ seat.number }}"{% endif %}>
+                                <span>{{ seat.number }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            {% else %}
+                <div class="empty-state">
+                    <h2>No seats available</h2>
+                    <p>This hall has no seats configured.</p>
+                </div>
+            {% endif %}
+
+            <div class="seat-legend" aria-label="Seat availability legend">
+                <span><i class="seat-legend-swatch" aria-hidden="true"></i> Available</span>
+                <span><i class="seat-legend-swatch seat-legend-booked" aria-hidden="true"></i> Booked</span>
+            </div>
+            <div class="form-actions">
+                <button class="button" type="submit">Book selected seats</button>
+                <a class="text-link" href="{% url 'cinema:book_ticket' film_id=hall.film.id %}">Cancel</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

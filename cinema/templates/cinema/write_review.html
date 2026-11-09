@@ -1,0 +1,20 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Review {{ film.name }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page">
+        <a class="back-link" href="{% url 'cinema:film_detail' film_id=film.id %}">← Back to {{ film.name }}</a>
+        <p class="eyebrow">Audience notes</p>
+        <h1>Review {{ film.name }}</h1>
+        <p class="form-intro">Share your rating and thoughts about this film.</p>
+        <form class="site-form" method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-actions">
+                <button class="button" type="submit">Post review</button>
+                <a class="text-link" href="{% url 'cinema:film_detail' film_id=film.id %}">Cancel</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

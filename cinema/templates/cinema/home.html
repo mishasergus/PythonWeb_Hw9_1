@@ -1,0 +1,52 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Frame - Discover films{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container hero-content">
+            <p class="eyebrow">A better kind of movie night</p>
+            <h1>Stories worth<br>staying in for.</h1>
+            <p class="hero-copy">Explore a hand-picked collection of films and find the one you’ll be thinking about tomorrow.</p>
+            <a class="button" href="{% url 'cinema:film_list' %}">Explore films <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-orbit" aria-hidden="true"></div>
+    </section>
+
+    <section class="section container">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">The collection</p>
+                <h2>Start exploring</h2>
+            </div>
+            <a class="text-link" href="{% url 'cinema:film_list' %}">View all films <span aria-hidden="true">→</span></a>
+        </div>
+        {% if films %}
+            <div class="film-grid">
+                {% for film in films %}
+                    <article class="film-card">
+                        <a class="poster-link" href="{% url 'cinema:film_detail' film_id=film.id %}">
+                            {% if film.img_url %}
+                                <img class="poster" src="{{ film.img_url }}" alt="Poster for {{ film.name }}" loading="lazy">
+                            {% else %}
+                                <div class="poster poster-placeholder" aria-label="No poster available">FRAME</div>
+                            {% endif %}
+                        </a>
+                        <div class="film-card-info">
+                            <div>
+                                <p class="card-category">{{ film.category.name }}</p>
+                                <h3><a href="{% url 'cinema:film_detail' film_id=film.id %}">{{ film.name }}</a></h3>
+                            </div>
+                            <span class="rating" aria-label="Rating {{ film.rating }} out of 10">★ {{ film.rating }}</span>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Your next favorite is waiting.</h3>
+                <p>There are no films in the collection yet. Check back soon.</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

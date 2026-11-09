@@ -1,0 +1,27 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}{{ title }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page">
+        {% if form.instance.pk %}
+            <a class="back-link" href="{% url 'cinema:hall_detail' hall_id=form.instance.id %}">← Back to hall</a>
+        {% else %}
+            <a class="back-link" href="{% url 'cinema:hall_list' %}">← Back to halls</a>
+        {% endif %}
+        <p class="eyebrow">Hall management</p>
+        <h1>{{ title }}</h1>
+        <form class="site-form" method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-actions">
+                <button class="button" type="submit">Save hall</button>
+                {% if form.instance.pk %}
+                    <a class="text-link" href="{% url 'cinema:hall_detail' hall_id=form.instance.id %}">Cancel</a>
+                {% else %}
+                    <a class="text-link" href="{% url 'cinema:hall_list' %}">Cancel</a>
+                {% endif %}
+            </div>
+        </form>
+    </section>
+{% endblock %}

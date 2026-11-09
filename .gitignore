@@ -1,0 +1,26 @@
+# Віртуальне середовище
+.venv/
+venv/
+ENV/
+env/
+
+# База даних SQLite
+*.sqlite3
+db.sqlite3
+
+# Кєш та скомпільовані файли Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Файли налаштувань IDE (PyCharm / VS Code)
+.idea/
+.vscode/
+
+# Змінні середовища та секрети
+.env
+.env.local
+
+# Медіафайли та локальні конфігурації
+media/
+local_settings.py

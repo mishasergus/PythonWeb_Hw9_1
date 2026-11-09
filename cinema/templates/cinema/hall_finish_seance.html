@@ -1,0 +1,23 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Finish seance - {{ hall.name }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page">
+        <a class="back-link" href="{% url 'cinema:hall_detail' hall_id=hall.id %}">← Back to hall</a>
+        <p class="eyebrow">Hall management</p>
+        <h1>Finish this seance?</h1>
+        <p class="form-intro">
+            This will remove all tickets booked for
+            {% if hall.film %}<strong>{{ hall.film.name }}</strong>{% else %}the current film{% endif %} in
+            <strong>{{ hall.name }}</strong>, then clear the film assignment. The hall remains available.
+        </p>
+        <form class="site-form" method="post">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button class="button button-danger" type="submit">Finish seance</button>
+                <a class="text-link" href="{% url 'cinema:hall_detail' hall_id=hall.id %}">Cancel</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

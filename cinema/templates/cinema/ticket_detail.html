@@ -1,0 +1,24 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Ticket details - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page">
+        <a class="back-link" href="{% url 'cinema:ticket_list' %}">← Back to my tickets</a>
+        <p class="eyebrow">Your ticket</p>
+        <h1>{% if ticket.hall.film %}{{ ticket.hall.film.name }}{% else %}Film unavailable{% endif %}</h1>
+        <div class="category-card">
+            <p><strong>Hall:</strong> {{ ticket.hall.name }}</p>
+            <p><strong>Seat:</strong> {{ ticket.seat_number }}</p>
+            <p><strong>Type:</strong> {{ ticket.get_seat_type_display }}</p>
+            <p><strong>Price:</strong> ${{ ticket.price }}</p>
+            <p><strong>Booked:</strong> {{ ticket.purchased_at|date:"M j, Y H:i" }}</p>
+        </div>
+        <div class="detail-actions">
+            {% if ticket.hall.film %}
+                <a class="button button-secondary" href="{% url 'cinema:film_detail' film_id=ticket.hall.film.id %}">View film</a>
+            {% endif %}
+            <a class="text-link danger-link" href="{% url 'cinema:ticket_delete' ticket_id=ticket.id %}">Cancel ticket</a>
+        </div>
+    </section>
+{% endblock %}

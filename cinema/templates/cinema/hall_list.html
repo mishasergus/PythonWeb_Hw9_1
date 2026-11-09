@@ -1,0 +1,38 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Halls - Frame{% endblock %}
+
+{% block content %}
+    <section class="container section">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Hall management</p>
+                <h1>Halls</h1>
+            </div>
+            <a class="button" href="{% url 'cinema:hall_create' %}">Add a hall</a>
+        </div>
+
+        {% if halls %}
+            <div class="category-grid">
+                {% for hall in halls %}
+                    <article class="category-card">
+                        <p class="eyebrow">{% if hall.film %}{{ hall.film.name }}{% else %}No film assigned{% endif %}</p>
+                        <h2><a href="{% url 'cinema:hall_detail' hall_id=hall.id %}">{{ hall.name }}</a></h2>
+                        <p>{{ hall.capacity }} seats · Regular ${{ hall.regular_price }} · VIP ${{ hall.vip_price }}</p>
+                        <div class="detail-actions">
+                            <a class="text-link" href="{% url 'cinema:hall_update' hall_id=hall.id %}">Edit hall</a>
+                            {% if hall.film %}
+                                <a class="text-link" href="{% url 'cinema:hall_finish_seance' hall_id=hall.id %}">Finish seance</a>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h2>No halls have been added</h2>
+                <p>Add a hall to start offering tickets for a film.</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

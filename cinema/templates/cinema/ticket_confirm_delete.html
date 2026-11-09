@@ -1,0 +1,22 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Cancel ticket - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page">
+        <a class="back-link" href="{% url 'cinema:ticket_detail' ticket_id=ticket.id %}">← Back to ticket</a>
+        <p class="eyebrow">Ticket management</p>
+        <h1>Cancel this ticket?</h1>
+        <p class="form-intro">
+            Your ticket for <strong>{% if ticket.hall.film %}{{ ticket.hall.film.name }}{% else %}the film{% endif %}</strong>,
+            {{ ticket.hall.name }}, seat {{ ticket.seat_number }}, will be removed.
+        </p>
+        <form class="site-form" method="post">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button class="button button-danger" type="submit">Cancel ticket</button>
+                <a class="text-link" href="{% url 'cinema:ticket_detail' ticket_id=ticket.id %}">Keep ticket</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

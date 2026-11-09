@@ -1,0 +1,21 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Delete {{ category.name }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page">
+        <div class="form-card danger-card">
+            <a class="back-link" href="{% url 'cinema:category_detail' category_id=category.id %}">← Back to category</a>
+            <p class="eyebrow">This action can’t be undone</p>
+            <h1>Delete category?</h1>
+            <p class="form-intro">You’re about to delete <strong>{{ category.name }}</strong>. Any films in this category will also be deleted.</p>
+            <form class="site-form" method="post">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button class="button button-danger" type="submit">Yes, delete category</button>
+                    <a class="button button-secondary" href="{% url 'cinema:category_detail' category_id=category.id %}">Keep category</a>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

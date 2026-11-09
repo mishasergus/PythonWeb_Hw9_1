@@ -1,0 +1,26 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Log in - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page auth-page">
+        <p class="eyebrow">Welcome back</p>
+        <h1>Log in to Frame.</h1>
+        <p class="form-intro">Sign in to pick up where you left off.</p>
+        <form class="site-form" method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+            {% for field in form %}
+                <p>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<span class="help-text">{{ field.help_text|safe }}</span>{% endif %}
+                    {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+                </p>
+            {% endfor %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+            <button class="button" type="submit">Log in</button>
+        </form>
+        <p class="auth-switch">New to Frame? <a href="{% url 'accounts:register' %}">Create an account</a>.</p>
+    </section>
+{% endblock %}

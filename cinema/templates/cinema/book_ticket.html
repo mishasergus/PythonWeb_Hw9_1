@@ -1,0 +1,30 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Book {{ film.name }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="container form-page">
+        <a class="back-link" href="{% url 'cinema:film_detail' film_id=film.id %}">← Back to film</a>
+        <p class="eyebrow">Ticket booking</p>
+        <h1>Choose a hall</h1>
+        <p class="form-intro">Select a hall for <strong>{{ film.name }}</strong>.</p>
+
+        {% if halls %}
+            <div class="category-grid">
+                {% for hall in halls %}
+                    <article class="category-card">
+                        <p class="eyebrow">{{ hall.capacity }} seats</p>
+                        <h2>{{ hall.name }}</h2>
+                        <p>Regular: ${{ hall.regular_price }} · VIP: ${{ hall.vip_price }}</p>
+                        <a class="button" href="{% url 'cinema:seat_selection' hall_id=hall.id %}">Choose seats</a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h2>No halls available</h2>
+                <p>There are currently no halls showing this film.</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

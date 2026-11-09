@@ -1,0 +1,61 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}{{ category.name }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="page-heading container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="{% url 'cinema:category_list' %}">Categories</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{{ category.name }}</span>
+        </nav>
+        <p class="eyebrow">A collection for every mood</p>
+        <h1>{{ category.name }}</h1>
+        <p>Explore the highest-rated films in this category.</p>
+        {% if user.is_staff %}
+            <div class="detail-actions">
+                <a class="button button-secondary" href="{% url 'cinema:category_update' category_id=category.id %}">Edit category</a>
+                <a class="text-link danger-link" href="{% url 'cinema:category_delete' category_id=category.id %}">Delete category</a>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="container section">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Curated picks</p>
+                <h2>Top-rated films</h2>
+            </div>
+            <a class="text-link" href="{% url 'cinema:film_list' %}?category_name={{ category.name|urlencode }}">View all in category <span aria-hidden="true">→</span></a>
+        </div>
+        {% if best_films %}
+            <div class="film-grid">
+                {% for film in best_films %}
+                    <article class="film-card">
+                        <a class="poster-link" href="{% url 'cinema:film_detail' film_id=film.id %}">
+                            {% if film.img_url %}
+                                <img class="poster" src="{{ film.img_url }}" alt="Poster for {{ film.name }}" loading="lazy">
+                            {% else %}
+                                <div class="poster poster-placeholder" aria-label="No poster available">FRAME</div>
+                            {% endif %}
+                        </a>
+                        <div class="film-card-info">
+                            <div>
+                                <p class="card-category">{{ category.name }}</p>
+                                <h2><a href="{% url 'cinema:film_detail' film_id=film.id %}">{{ film.name }}</a></h2>
+                            </div>
+                            <span class="rating" aria-label="Rating {{ film.rating }} out of 10">★ {{ film.rating }}</span>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <span class="empty-state-icon" aria-hidden="true">✦</span>
+                <h2>No films here just yet</h2>
+                <p>There aren’t any films in this category yet. Browse all films to find something to watch.</p>
+                <a class="button button-secondary" href="{% url 'cinema:film_list' %}">Browse all films</a>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}{{ film.name }} - Frame{% endblock %}
+
+{% block content %}
+    <section class="container detail-layout">
+        <div class="detail-poster">
+            {% if film.img_url %}
+                <img class="poster" src="{{ film.img_url }}" alt="Poster for {{ film.name }}">
+            {% else %}
+                <div class="poster poster-placeholder" aria-label="No poster available">FRAME</div>
+            {% endif %}
+        </div>
+        <div class="detail-content">
+            <a class="back-link" href="{% url 'cinema:film_list' %}">← Back to films</a>
+            <p class="eyebrow">{{ film.category.name }}</p>
+            <h1>{{ film.name }}</h1>
+            <p class="detail-rating"><span class="rating">★ {{ film.rating }}</span> <span>out of 10</span></p>
+            <div class="detail-description">{{ film.description|linebreaks }}</div>
+            <div class="detail-actions">
+                <a class="button" href="{% url 'cinema:book_ticket' film_id=film.id %}">Book tickets</a>
+                {% if user.is_authenticated %}
+                    <a class="button button-secondary" href="{% url 'cinema:write_review' film_id=film.id %}">Write a review</a>
+                {% else %}
+                    <a class="button button-secondary" href="{% url 'accounts:login' %}?next={% url 'cinema:write_review' film_id=film.id %}">Log in to review</a>
+                {% endif %}
+            </div>
+            {% if user.is_staff %}
+                <div class="detail-actions">
+                    <a class="button button-secondary" href="{% url 'cinema:film_update' film_id=film.id %}">Edit film</a>
+                    <a class="text-link danger-link" href="{% url 'cinema:film_delete' film_id=film.id %}">Delete film</a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="container reviews-section" aria-labelledby="reviews-heading">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Audience notes</p>
+                <h2 id="reviews-heading">Reviews <span class="review-count">({{ reviews|length }})</span></h2>
+            </div>
+        </div>
+        {% if reviews %}
+            <div class="review-list">
+                {% for review in reviews %}
+                    <article class="review-card">
+                        <div class="review-heading">
+                            <h3>{{ review.user.username }}</h3>
+                            <span class="rating">★ {{ review.rating|floatformat:1 }}/10</span>
+                        </div>
+                        <p class="review-date">{{ review.created_at|date:"F j, Y" }}</p>
+                        <p class="review-comment">{{ review.comment|linebreaksbr }}</p>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>No reviews yet</h3>
+                <p>Be the first to share what you thought of {{ film.name }}.</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

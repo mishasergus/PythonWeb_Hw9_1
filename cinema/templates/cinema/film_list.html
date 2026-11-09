@@ -1,0 +1,78 @@
+{% extends "cinema/base.html" %}
+
+{% block title %}Films - Frame{% endblock %}
+
+{% block content %}
+    <section class="page-heading container">
+        <p class="eyebrow">Your next movie night starts here</p>
+        <h1>Find your film.</h1>
+        <p>Search by title or choose a category to narrow down the collection.</p>
+    </section>
+
+    <section class="container section">
+        <div class="filter-panel">
+            <form class="filter-form" method="get" action="{% url 'cinema:film_list' %}">
+                <div class="filter-field">
+                    <label for="film-search">Film title</label>
+                    <input id="film-search" type="search" name="q" value="{{ request.GET.q }}" placeholder="e.g. The Grand Adventure">
+                </div>
+                <div class="filter-field">
+                    <label for="category-search">Category</label>
+                    <select id="category-search" name="category_name">
+                        <option value="">All categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.name }}" {% if selected_category == category.name %}selected{% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="button" type="submit">Show films <span aria-hidden="true">→</span></button>
+                {% if request.GET.q or selected_category %}
+                    <a class="text-link filter-clear" href="{% url 'cinema:film_list' %}">Clear filters</a>
+                {% endif %}
+            </form>
+
+            {% if categories %}
+                <nav class="category-links" aria-label="Browse films by category">
+                    <span>Quick browse</span>
+                    {% for category in categories %}
+                        <a class="category-chip" href="{% url 'cinema:film_list' %}?category_name={{ category.name|urlencode }}">{{ category.name }}</a>
+                    {% endfor %}
+                </nav>
+            {% endif %}
+        </div>
+
+        {% if films %}
+            <div class="results-heading">
+                <h2>{% if request.GET.q or selected_category %}Search results{% else %}All films{% endif %}</h2>
+                <span>{{ films|length }} film{{ films|length|pluralize }}</span>
+            </div>
+            <div class="film-grid">
+                {% for film in films %}
+                    <article class="film-card">
+                        <a class="poster-link" href="{% url 'cinema:film_detail' film_id=film.id %}">
+                            {% if film.img_url %}
+                                <img class="poster" src="{{ film.img_url }}" alt="Poster for {{ film.name }}" loading="lazy">
+                            {% else %}
+                                <div class="poster poster-placeholder" aria-label="No poster available">FRAME</div>
+                            {% endif %}
+                        </a>
+                        <div class="film-card-info">
+                            <div>
+                                <p class="card-category">{{ film.category.name }}</p>
+                                <h2><a href="{% url 'cinema:film_detail' film_id=film.id %}">{{ film.name }}</a></h2>
+                            </div>
+                            <span class="rating" aria-label="Rating {{ film.rating }} out of 10">★ {{ film.rating }}</span>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <span class="empty-state-icon" aria-hidden="true">⌕</span>
+                <h2>No films found</h2>
+                <p>Try another title or category, or clear your filters to see the full collection.</p>
+                <a class="button button-secondary" href="{% url 'cinema:film_list' %}">Show all films</a>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
